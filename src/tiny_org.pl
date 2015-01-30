@@ -26,14 +26,47 @@ sub note
 {
    my $state = shift();
    my $note = shift();
+   my $color = $conf{note}{$state};
    $note = $state if not $note ;
-   print color "bold $conf{note}{$state}";
+   print color "bold  $color";
    print $note;
    print color 'reset';
-   
 }
-
-
+sub bold
+{
+   my $word = shift();
+   print color 'bold';
+   print $word;
+   print color 'faint';
+}
+sub italic
+{
+   my $word = shift();
+   print color 'italic';
+   print $word;
+   print color 'faint';
+}
+sub o_link
+{
+   my $word = shift();
+   my $name;
+   $word =~ s/^\[\[//;
+   $word =~ s/\]\]$//;
+   if ( $word =~ /.*\]\[.*/)
+   {
+      $name = $word;
+      $name =~ s/.*\]\[//;
+      $word =~ s/\]\[.*//;
+   }
+   if ( $name )
+   {
+      italic("$name ($word)");
+   }
+   else
+   {
+      italic  $word;
+   }
+}
 sub head($)
 {
    my $head = shift(); # head string
@@ -48,7 +81,7 @@ sub head($)
       $aste_str="$aste_str*";
    }
    
-   print color $conf{head}[$level-1];
+   print color  $conf{head}[$level-1];
    print $aste_str, ' ';
    # TODO: add support for done
    for my $state ( 'TODO' , 'DONE' )
@@ -78,25 +111,23 @@ sub line
    for my $word( @line )
    {
       # check if we got format sigs
-      if ( $word =~ /\**\*/ or $word =~ /\/*\// ) 
+
+      if ( $word =~ /^\**\*/ )
       {
-	 if ( $word =~ /\**\*/ )
-	 {
-	    print color 'bold';
-	    print $word;
-	    print color 'faint';
-	 }
-	 if ( $word =~ /\/*\//)
-	 {
-	    print color 'italic';
-	    print $word;
-	    print color 'faint';
-	 }
+	 bold($word);
+      }
+      if ( $word =~ /^\/*\//)
+      {
+	 italic($word);
+      }
+      if ( $word =~ /^\[\[.*\]\]/)
+      {
+	 o_link($word);
       }
       # or if we are just a word
       else
       {
-	 print $word;
+	print $word;
       }
       print ' '; # add space til next word
    }
@@ -119,10 +150,7 @@ for my $line ( @input_file )
       {
 	 line($line);
       }
+      print color 'reset';
       print "\n";
    }
 }
-
-#head("** TODO bla");
-#note('TODO', "bla");
-
