@@ -132,7 +132,13 @@ sub line
       print ' '; # add space til next word
    }
 }
+
 my $input_file_raw = $ARGV[0];
+if ( ! -e $input_file_raw )
+{
+   print("No File given\n");
+   exit(1);
+}
 my @input_file = file_to_array($input_file_raw);
 for my $line ( @input_file )
 {
