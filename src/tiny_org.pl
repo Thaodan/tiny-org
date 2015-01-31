@@ -142,7 +142,7 @@ for my $line ( @input_file )
    }
    else
    {
-      if ( $line =~ /\*{1,}\ / )
+      if ( $line =~ /\*{1,}\ / and not  $line =~ /\*.*[^\*]\*/ )
       {
 	 head($line);
       }
