@@ -16,7 +16,7 @@ my %colors = (
 	      light_blue => 'ansi12'
 	      );
 my %conf = (
-	      head => [ 'green', $colors{light_blue}],
+	      head => [ 'green', 'blue', $colors{light_blue}],
 	      note => {TODO =>'red',
 			DONE => 'green'
 		      }
